@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Motorola Stock Watcher</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <main>
+    <h1>Motorola Stock Watcher</h1>
+
+    <label for="productUrls">Product URLs (comma ya new line se alag karo)</label>
+    <textarea id="productUrls" rows="4" placeholder="https://www.motorola.in/smartphones-motorola-edge-70-max/p?skuId=697"></textarea>
+    <p class="hint">URL me color/storage wala skuId hona chahiye.</p>
+
+    <label for="quantity">Quantity (har product kitne chahiye)</label>
+    <input id="quantity" type="number" min="1" max="10" value="1" />
+
+    <details id="profileBox" open>
+      <summary>📦 Checkout details (auto-fill)</summary>
+      <p class="hint">Checkout page pe jo field khaali hoga wahi bharega. Pehle se bhara ho to nahi chhedega.</p>
+      <input id="pfEmail" type="email" placeholder="Email" />
+      <div class="row tight">
+        <input id="pfFirstName" type="text" placeholder="First name" />
+        <input id="pfLastName" type="text" placeholder="Last name" />
+      </div>
+      <input id="pfPhone" type="tel" placeholder="Phone (10 digits)" />
+      <input id="pfPincode" type="text" inputmode="numeric" placeholder="Pin code" />
+      <input id="pfAddress1" type="text" placeholder="Address 1 (Flat, building, street)" />
+      <input id="pfAddress2" type="text" placeholder="Address 2 (optional)" />
+      <div class="row tight">
+        <input id="pfState" type="text" placeholder="State (jaise Haryana)" />
+        <input id="pfCity" type="text" placeholder="City" />
+      </div>
+    </details>
+
+    <label for="interval">Reload interval (seconds, min 3)</label>
+    <input id="interval" type="number" min="3" value="10" />
+
+    <label for="botToken">Telegram Bot Token (optional)</label>
+    <input id="botToken" type="password" placeholder="123456:ABC..." />
+
+    <label for="chatId">Telegram Chat ID (optional)</label>
+    <input id="chatId" type="text" placeholder="123456789" />
+
+    <label>Payment method chahiye (upar wala pehle)</label>
+    <div class="methods">
+      <label class="chk"><input type="checkbox" value="cod" class="pm" /> COD (Cash on Delivery)</label>
+      <label class="chk"><input type="checkbox" value="upi" class="pm" /> UPI</label>
+      <label class="chk"><input type="checkbox" value="card" class="pm" /> Credit/Debit Card</label>
+      <label class="chk"><input type="checkbox" value="emi" class="pm" /> EMI</label>
+      <label class="chk"><input type="checkbox" value="netbanking" class="pm" /> Netbanking</label>
+    </div>
+    <label class="chk"><input type="checkbox" id="retryOnMissingMethod" /> Method na mile to cart se dobara try karte raho</label>
+
+    <label for="netbankingBank">🏦 Netbanking bank (Netbanking tick ho tab)</label>
+    <input id="netbankingBank" type="text" list="bankList" placeholder="HDFC, SBI, ICICI, Axis, Bank of India..." />
+    <datalist id="bankList">
+      <option value="HDFC"></option>
+      <option value="SBI"></option>
+      <option value="ICICI"></option>
+      <option value="Axis"></option>
+      <option value="Kotak"></option>
+      <option value="Bank of India"></option>
+      <option value="Bank of Baroda"></option>
+      <option value="Bank of Maharashtra"></option>
+      <option value="Canara Bank"></option>
+      <option value="Punjab National Bank"></option>
+      <option value="Union Bank of India"></option>
+      <option value="IDFC First Bank"></option>
+      <option value="Yes Bank"></option>
+      <option value="IndusInd Bank"></option>
+    </datalist>
+    <p class="hint">Bank ka naam waisa hi likho jaisa PayU pe dikhta hai. Login/OTP aap bank page pe khud karoge.</p>
+
+    <label for="emiBank">💳 EMI on Cards (EMI tick ho tab)</label>
+    <div class="row tight">
+      <input id="emiBank" type="text" list="bankList" placeholder="EMI bank: HDFC, Axis, SBI..." />
+      <select id="emiTenure">
+        <option value="">Mahine</option>
+        <option value="3">3 months</option>
+        <option value="6">6 months</option>
+        <option value="9">9 months</option>
+        <option value="12">12 months</option>
+        <option value="18">18 months</option>
+        <option value="24">24 months</option>
+      </select>
+    </div>
+    <p class="hint">Card auto-fill wala card (isi bank ka credit card) EMI me bhara jaayega. OTP aap daaloge.</p>
+
+    <label for="alarmSeconds">Alarm kitne second baje</label>
+    <div class="row tight">
+      <input id="alarmSeconds" type="number" min="1" max="300" value="15" />
+      <button id="testAlarm" class="secondary">🔔 Test</button>
+      <button id="stopAlarm" class="secondary">🔕 Stop</button>
+    </div>
+
+    <details id="cardBox">
+      <summary>💳 Card auto-fill (optional)</summary>
+      <p class="hint">"Credit/Debit Card" tick hona chahiye. Extension PayU pe card bhar ke Pay dabayega, OTP aap daaloge.</p>
+      <input id="cardNumber" type="password" inputmode="numeric" autocomplete="off" placeholder="Card number" />
+      <div class="row tight">
+        <input id="cardExpiry" type="text" autocomplete="off" placeholder="MM/YY" />
+        <input id="cardCvv" type="password" inputmode="numeric" autocomplete="off" placeholder="CVV" />
+      </div>
+      <input id="cardName" type="text" autocomplete="off" placeholder="Name on card (optional)" />
+      <label class="chk"><input type="checkbox" id="cardPersist" /> Chrome restart ke baad bhi yaad rakho (kam safe)</label>
+      <div class="row tight">
+        <button id="saveCard" class="secondary">Save Card</button>
+        <button id="clearCard" class="secondary">Delete Card</button>
+      </div>
+      <div id="cardInfo" class="hint">Card saved nahi hai</div>
+    </details>
+
+    <label for="startAt">⏰ Is time pe apne aap Start karo</label>
+    <div class="row tight">
+      <input id="startAt" type="datetime-local" step="1" />
+      <button id="schedule" class="secondary">Schedule</button>
+      <button id="cancelSchedule" class="secondary">Cancel</button>
+    </div>
+    <div id="schedInfo" class="hint">Koi schedule nahi</div>
+
+    <div class="row">
+      <button id="start">Start</button>
+      <button id="checkNow" class="secondary">Check Now</button>
+    </div>
+    <button id="stop" class="danger">Stop</button>
+
+    <pre id="status">Ready</pre>
+  </main>
+  <script src="popup.js"></script>
+</body>
+</html>

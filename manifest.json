@@ -1,0 +1,50 @@
+{
+  "manifest_version": 3,
+  "name": "Motorola Stock Watcher",
+  "version": "1.0.0",
+  "description": "motorola.in pe stock watch: Add to cart \u2192 quantity \u2192 checkout details auto-fill \u2192 Pay securely \u2192 PayU (card/netbanking/EMI) \u2192 alarm + Telegram.",
+  "permissions": [
+    "storage",
+    "tabs",
+    "alarms",
+    "offscreen"
+  ],
+  "host_permissions": [
+    "https://www.motorola.in/*",
+    "https://motorola.in/*",
+    "https://*.payu.in/*",
+    "https://api.telegram.org/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "Motorola Stock Watcher"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.motorola.in/*",
+        "https://motorola.in/*"
+      ],
+      "js": [
+        "shared/dom.js",
+        "content/motorola.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://*.payu.in/*"
+      ],
+      "js": [
+        "shared/dom.js",
+        "shared/modal.js",
+        "content/payframe.js"
+      ],
+      "all_frames": true,
+      "run_at": "document_idle"
+    }
+  ]
+}
